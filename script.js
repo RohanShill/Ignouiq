@@ -78,6 +78,190 @@ document.querySelectorAll('.btn-primary').forEach(button => {
     }
 });
 
+// Add to your existing script.js
+
+const API_BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000/api'
+  : '/api';
+
+// Login Function
+async function handleLogin(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      // Store token and user data
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      alert('Login successful!');
+      window.location.href = 'index.html';
+    } else {
+      alert(data.error || 'Login failed');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Error logging in. Please try again.');
+  }
+}
+
+// Signup Function
+async function handleSignup(event) {
+  event.preventDefault();
+  
+  const name = document.getElementById('signup-name').value;
+  const email = document.getElementById('signup-email').value;
+  const phone = document.getElementById('signup-phone').value;
+  const password = document.getElementById('signup-password').value;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, phone, password })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert('Account created successfully!');
+      switchTab('login');
+    } else {
+      alert(data.error || 'Signup failed');
+    }
+  } catch (error) {
+    console.error('Signup error:', error);
+    alert('Error creating account. Please try again.');
+  }
+}
+
+// Razorpay Payment Function
+async function initiatePayment(productName, amount, productId) {
+  // Check if user is logged in
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please login first to purchase');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    // Step 1: Create order
+    const response = await fetch(`${API_BASE_URL}/create-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amount,
+        productId,
+        productName
+      })
+    });
+
+    const orderData = await response.json();
+
+    if (!orderData.success) {
+      alert('Error creating order');
+      return;
+    }
+
+    // Step 2: Open Razorpay checkout
+    const options = {
+      key: orderData.key,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "IGNOU IQ Hindi",
+      description: productName,
+      order_id: orderData.orderId,
+      handler: async function (response) {
+        // Step 3: Verify payment
+        await verifyPayment(response, productId);
+      },
+      prefill: {
+        name: JSON.parse(localStorage.getItem('user')).name,
+        email: JSON.parse(localStorage.getItem('user')).email,
+        contact: JSON.parse(localStorage.getItem('user')).phone
+      },
+      theme: {
+        color: "#0EA5E9"
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    console.error('Payment error:', error);
+    alert('Error initiating payment. Please try again.');
+  }
+}
+
+// Verify Payment
+async function verifyPayment(paymentResponse, productId) {
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/verify-payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        razorpay_order_id: paymentResponse.razorpay_order_id,
+        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+        razorpay_signature: paymentResponse.razorpay_signature,
+        productId
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.verified) {
+      alert('Payment successful! You can now download your notes.');
+      window.location.href = data.downloadUrl;
+    } else {
+      alert('Payment verification failed. Please contact support.');
+    }
+  } catch (error) {
+    console.error('Verification error:', error);
+    alert('Error verifying payment. Please contact support.');
+  }
+}
+
+// Check if user is logged in on page load
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  
+  if (token && user) {
+    // User is logged in - update UI
+    const userData = JSON.parse(user);
+    // Show user name in header or add logout button
+    console.log('Logged in as:', userData.name);
+  }
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', checkAuth);
+
 // Active navigation highlight based on scroll position
 window.addEventListener('scroll', function() {
     const sections = document.querySelectorAll('section[id]');
