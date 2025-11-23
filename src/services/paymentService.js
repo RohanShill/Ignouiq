@@ -1,43 +1,34 @@
-// Payment Service
+// Mock Payment Service (temporary - until backend is deployed)
 
 export const loadRazorpay = () => {
     return new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
+        // Mock: Razorpay already loaded
+        resolve(true);
     });
 };
 
-export const initiatePayment = async (orderData) => {
-    const response = await fetch('/api/payment/create-order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-    });
+export const initiatePayment = async ({ amount, productId }) => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Error initiating payment');
-    }
-    return data;
+    // Mock success response
+    return {
+        success: true,
+        key: 'rzp_test_mock',
+        amount: amount * 100,
+        currency: 'INR',
+        orderId: 'order_mock_' + Date.now(),
+        productId: productId
+    };
 };
 
-export const verifyPayment = async (paymentData) => {
-    const response = await fetch('/api/payment/verify', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData),
-    });
+export const verifyPayment = async (response) => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Payment verification failed');
-    }
-    return data;
+    // Mock success - payment verified
+    return {
+        verified: true,
+        message: 'Payment successful (Mock Mode)'
+    };
 };
