@@ -1,34 +1,43 @@
-// Mock Payment Service (temporary - until backend is deployed)
+// Payment Service - Real Razorpay Integration
 
 export const loadRazorpay = () => {
     return new Promise((resolve) => {
-        // Mock: Razorpay already loaded
-        resolve(true);
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
     });
 };
 
 export const initiatePayment = async ({ amount, productId }) => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    const response = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount, productId }),
+    });
 
-    // Mock success response
-    return {
-        success: true,
-        key: 'rzp_test_mock',
-        amount: amount * 100,
-        currency: 'INR',
-        orderId: 'order_mock_' + Date.now(),
-        productId: productId
-    };
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Error initiating payment');
+    }
+    return data;
 };
 
-export const verifyPayment = async (response) => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+export const verifyPayment = async (paymentData) => {
+    const response = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+    });
 
-    // Mock success - payment verified
-    return {
-        verified: true,
-        message: 'Payment successful (Mock Mode)'
-    };
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Payment verification failed');
+    }
+    return data;
 };

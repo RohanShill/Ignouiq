@@ -67,22 +67,32 @@ const Notes = () => {
             const order = await initiatePayment({ amount: note.price, productId: note.id });
 
             if (order.success) {
-                // Mock payment - show confirmation dialog
-                const confirmed = window.confirm(
-                    `Mock Payment Mode\n\n` +
-                    `Item: ${note.title}\n` +
-                    `Amount: ₹${note.price}\n\n` +
-                    `Click OK to simulate successful payment`
-                );
-
-                if (confirmed) {
-                    // Simulate payment success
-                    const verification = { verified: true };
-                    if (verification.verified) {
-                        alert('✅ Payment Successful! (Mock Mode)\n\nYou can now download the notes from your Dashboard.');
-                        // In real app, this would update user's purchased items in database
+                const options = {
+                    key: order.key,
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "IGNOU IQ HINDI",
+                    description: note.title,
+                    order_id: order.orderId,
+                    handler: async function (response) {
+                        const verification = await verifyPayment(response);
+                        if (verification.verified) {
+                            alert('✅ Payment Successful!\n\nYou can now download the notes from your Dashboard.');
+                        } else {
+                            alert('Payment verification failed.');
+                        }
+                    },
+                    prefill: {
+                        name: user.name,
+                        email: user.email,
+                    },
+                    theme: {
+                        color: "#2563EB"
                     }
-                }
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.open();
             }
         } catch (error) {
             console.error('Payment failed:', error);
