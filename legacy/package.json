@@ -1,0 +1,16 @@
+{
+  "name": "ignouiq",
+  "version": "1.0.0",
+  "description": "IGNOU IQ Hindi - Educational Platform",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "razorpay": "^2.9.2",
+    "crypto": "^1.0.1"
+  }
+}

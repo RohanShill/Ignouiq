@@ -283,3 +283,148 @@ window.addEventListener('scroll', function() {
         }
     });
 });
+
+// ============================================
+// AUTHENTICATION & PAYMENT FUNCTIONS
+// ============================================
+
+const API_URL = '/api';
+
+// Check auth on page load
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    const userName = document.getElementById('userName');
+    
+    if (token && user) {
+        const userData = JSON.parse(user);
+        if (authButtons) authButtons.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'flex';
+        if (userName) userName.textContent = userData.name;
+    } else {
+        if (authButtons) authButtons.style.display = 'flex';
+        if (userMenu) userMenu.style.display = 'none';
+    }
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    alert('Logged out successfully!');
+    window.location.reload();
+}
+
+// Razorpay Payment
+async function initiatePayment(productName, amount, productId) {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        alert('Please login first to purchase notes');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/create-order`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ amount, productId, productName })
+        });
+
+        const orderData = await response.json();
+
+        if (!orderData.success) {
+            alert('Error creating order');
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        const options = {
+            key: orderData.key,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: "IGNOU IQ Hindi",
+            description: productName,
+            order_id: orderData.orderId,
+            handler: function (response) {
+                verifyPayment(response, productId);
+            },
+            prefill: {
+                name: user.name,
+                email: user.email,
+                contact: user.phone
+            },
+            theme: {
+                color: "#0EA5E9"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (error) {
+        alert('Error initiating payment');
+    }
+}
+
+// Verify Payment
+async function verifyPayment(paymentResponse, productId) {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/verify-payment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                productId
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.verified) {
+            alert('🎉 Payment Successful! Download link sent to your email.');
+            window.location.reload();
+        } else {
+            alert('Payment verification failed. Contact support.');
+        }
+    } catch (error) {
+        alert('Error verifying payment');
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+    
+    // Add payment to Buy Now buttons
+    document.querySelectorAll('.btn-primary').forEach(button => {
+        if (button.textContent.trim() === 'Buy Now') {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const card = this.closest('.notes-item');
+                if (card) {
+                    const productName = card.querySelector('h4').textContent;
+                    const priceText = card.querySelector('.price').textContent;
+                    const amount = parseInt(priceText.replace('₹', '').replace(',', ''));
+                    const productId = 'PRODUCT_' + Date.now();
+                    
+                    initiatePayment(productName, amount, productId);
+                }
+            });
+        }
+    });
+});
