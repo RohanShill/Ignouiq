@@ -10,11 +10,35 @@ const Dashboard = () => {
     if (loading) return <div>Loading...</div>;
     if (!user) return <Navigate to="/login" />;
 
-    // Mock purchased items
-    const purchasedItems = [
-        { id: 1, title: 'BEGC-101 - Foundation Course in English', date: '2025-11-20' },
-        { id: 2, title: 'BHDLA-135 - Hindi Sahitya ka Itihas', date: '2025-11-22' }
-    ];
+    const handleDownload = async (filename, title) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/downloads/${filename}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title}.pdf`; // Suggest a filename
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                alert('Download failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading file');
+        }
+    };
+
+    const purchasedItems = user.purchasedItems || [];
 
     return (
         <div className="dashboard-page">
@@ -47,13 +71,16 @@ const Dashboard = () => {
                     <div className="dashboard-content">
                         <h3 className="section-subtitle">My Purchased Notes</h3>
                         <div className="purchased-list">
-                            {purchasedItems.map(item => (
-                                <div key={item.id} className="purchased-item fade-in">
+                            {purchasedItems.map((item, index) => (
+                                <div key={index} className="purchased-item fade-in">
                                     <div className="item-info">
                                         <h4>{item.title}</h4>
-                                        <span className="purchase-date">Purchased on: {item.date}</span>
+                                        <span className="purchase-date">Purchased on: {new Date(item.purchaseDate).toLocaleDateString()}</span>
                                     </div>
-                                    <button className="btn btn-primary btn-sm">
+                                    <button
+                                        className="btn btn-primary btn-sm"
+                                        onClick={() => handleDownload(item.productId + '.pdf', item.title)}
+                                    >
                                         <Download size={16} /> Download PDF
                                     </button>
                                 </div>

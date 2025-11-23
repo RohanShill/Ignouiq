@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import paymentRoutes from './routes/payment.js';
+import downloadRoutes from './routes/downloads.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/downloads', downloadRoutes);
 
 app.get('/', (req, res) => {
     res.send('IGNOU IQ HINDI API is running');

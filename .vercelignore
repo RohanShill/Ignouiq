@@ -1,0 +1,6 @@
+# Keep node_modules and .env out of Git
+node_modules/
+.env
+.vercel
+dist/
+.DS_Store
