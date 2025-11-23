@@ -55,7 +55,10 @@ const Notes = () => {
 
         if (note.isFree) {
             // Download free PDF from public folder
-            const pdfUrl = `/free_notes/${note.code.toLowerCase()}.pdf`;
+            // Use test.pdf for Political Science Test 1
+            const pdfUrl = note.code === 'POLSCI-TEST1'
+                ? '/free_notes/test.pdf'
+                : `/free_notes/${note.code.toLowerCase()}.pdf`;
             window.open(pdfUrl, '_blank');
             return;
         }
