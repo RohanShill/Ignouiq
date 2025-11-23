@@ -13,7 +13,7 @@ const NOTES_DATA = [
     { id: 4, code: 'BSOC-131', title: 'Introduction to Sociology', category: 'Sociology', price: 199, isFree: false },
     { id: 5, code: 'BPSC-131', title: 'Political Theory', category: 'Political Science', price: 249, isFree: false },
     { id: 6, code: 'BEVAE-181', title: 'Environmental Studies', category: 'General', price: 0, isFree: true },
-    { id: 7, code: 'POLSCI-TEST1', title: 'Political Science Test 1', category: 'Political Science', price: 99, isFree: false },
+    { id: 7, code: 'POLSCI-TEST1', title: 'Political Science Test 1', category: 'Political Science', price: 0, isFree: true },
     { id: 8, code: 'HISTORY-TEST', title: 'History Test Note', category: 'History', price: 149, isFree: false },
 ];
 
