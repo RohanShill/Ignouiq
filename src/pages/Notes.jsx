@@ -54,7 +54,9 @@ const Notes = () => {
         }
 
         if (note.isFree) {
-            alert('Download started!');
+            // Download free PDF from public folder
+            const pdfUrl = `/free_notes/${note.code.toLowerCase()}.pdf`;
+            window.open(pdfUrl, '_blank');
             return;
         }
 

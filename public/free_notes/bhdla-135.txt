@@ -1,0 +1,8 @@
+This is a sample PDF for Hindi Sahitya ka Itihas (BHDLA-135).
+
+This is just a placeholder text file. Replace this with your actual PDF file.
+
+To add real PDFs:
+1. Delete this file
+2. Add your actual PDF file here
+3. Name it: bhdla-135.pdf
