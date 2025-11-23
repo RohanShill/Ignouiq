@@ -1,33 +1,45 @@
-// Auth Service
+// Mock Auth Service (temporary - until backend is deployed)
 
 export const loginUser = async (email, password) => {
-    const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-    }
-    return data;
+    // Mock success response
+    return {
+        success: true,
+        token: 'mock_token_' + Date.now(),
+        user: {
+            id: '1',
+            name: 'Test User',
+            email: email,
+            phone: '1234567890',
+            purchasedItems: [
+                {
+                    productId: '7',
+                    title: 'Political Science Test 1',
+                    purchaseDate: new Date().toISOString(),
+                    orderId: 'mock_order_123',
+                    amount: 99
+                }
+            ]
+        }
+    };
 };
 
 export const signupUser = async (userData) => {
-    const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
-    }
-    return data;
+    // Mock success response
+    return {
+        success: true,
+        token: 'mock_token_' + Date.now(),
+        user: {
+            id: '2',
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone,
+            purchasedItems: []
+        }
+    };
 };
