@@ -22,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/downloads', downloadRoutes);
+app.use('/api/products', productRoutes);
 
 app.get('/', (req, res) => {
     res.send('IGNOU IQ HINDI API is running');
