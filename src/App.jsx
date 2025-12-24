@@ -17,9 +17,8 @@ function App() {
           <main style={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
               <Route path="/notes" element={<Notes />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/assignments" element={<Assignments />} />
               <Route path="/assignments" element={<Assignments />} />
             </Routes>
           </main>

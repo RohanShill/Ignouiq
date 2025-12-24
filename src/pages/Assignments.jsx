@@ -34,12 +34,6 @@ const Assignments = () => {
     };
 
     const handleDownload = (item) => {
-        if (!user) {
-            alert('Please login to download assignments');
-            navigate('/login');
-            return;
-        }
-
         const pdfUrl = `/assignments/${item.code.toLowerCase()}.pdf`;
         window.open(pdfUrl, '_blank');
     };

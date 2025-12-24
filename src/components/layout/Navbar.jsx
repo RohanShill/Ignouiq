@@ -29,19 +29,6 @@ const Navbar = () => {
                     <Link to="/notes" className="nav-link">Notes</Link>
                     <Link to="/assignments" className="nav-link">Assignments</Link>
                     <Link to="/classes" className="nav-link">Classes</Link>
-
-                    {user ? (
-                        <div className="user-menu">
-                            <Link to="/dashboard" className="user-name"><User size={18} /> {user.name}</Link>
-                            <button onClick={handleLogout} className="btn-icon" title="Logout">
-                                <LogOut size={18} />
-                            </button>
-                        </div>
-                    ) : (
-                        <Link to="/login" className="btn btn-primary btn-sm">
-                            Login
-                        </Link>
-                    )}
                 </nav>
 
                 {/* Mobile Menu Toggle */}
@@ -60,17 +47,6 @@ const Navbar = () => {
                     <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)}>Notes</Link>
                     <Link to="/assignments" onClick={() => setIsMobileMenuOpen(false)}>Assignments</Link>
                     <Link to="/classes" onClick={() => setIsMobileMenuOpen(false)}>Classes</Link>
-                    {user ? (
-                        <>
-                            <div className="mobile-user-info">Signed in as {user.name}</div>
-                            <Link to="/dashboard" className="btn btn-secondary w-full" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</Link>
-                            <button onClick={handleLogout} className="btn btn-secondary w-full" style={{ marginTop: '0.5rem' }}>Logout</button>
-                        </>
-                    ) : (
-                        <Link to="/login" className="btn btn-primary w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                            Login
-                        </Link>
-                    )}
                 </div>
             )}
         </header>

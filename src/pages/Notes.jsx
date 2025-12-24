@@ -47,12 +47,6 @@ const Notes = () => {
     };
 
     const handleBuy = async (note) => {
-        if (!user) {
-            alert('Please login to purchase notes');
-            navigate('/login');
-            return;
-        }
-
         if (note.isFree) {
             // Download free PDF from public folder
             // Use test.pdf for Political Science Test 1
