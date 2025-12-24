@@ -6,8 +6,16 @@ import './Assignments.css';
 
 // Mock Data for Assignments
 const ASSIGNMENTS_DATA = [
-    { id: 1, code: 'BEGC-101', title: 'Foundation Course in English - Assignment 1', category: 'English', year: '2024-25', isFree: true },
-    { id: 2, code: 'BHDLA-135', title: 'Hindi Sahitya ka Itihas - Assignment 1', category: 'Hindi', year: '2024-25', isFree: true },
+    { id: 1, code: 'BHDAE-182', title: 'Hindi Bhasha aur Sampreshan', category: 'Hindi', year: '2025-26', isFree: true },
+    { id: 2, code: 'BHIC-102', title: 'Social Formations and Cultural Patterns of the Ancient World', category: 'History', year: '2025-26', isFree: true },
+    { id: 3, code: 'BPAG-171', title: 'Disaster Management', category: 'Public Administration', year: '2025-26', isFree: true },
+    { id: 4, code: 'BPSC-102', title: 'Constitutional Government and Democracy in India', category: 'Political Science', year: '2025-26', isFree: true },
+    { id: 5, code: 'BPSC-105', title: 'Introduction to Comparative Government and Politics', category: 'Political Science', year: '2025-26', isFree: true },
+    { id: 6, code: 'BPSC-109', title: 'Classical Political Philosophy', category: 'Political Science', year: '2025-26', isFree: true },
+    { id: 7, code: 'BPSC-112', title: 'Indian Political Thought-I', category: 'Political Science', year: '2025-25', isFree: true },
+    { id: 8, code: 'BPSC-113', title: 'Modern Political Philosophy', category: 'Political Science', year: '2025-26', isFree: true },
+    { id: 9, code: 'BPSC-114', title: 'Indian Political Thought-II', category: 'Political Science', year: '2025-26', isFree: true },
+    { id: 10, code: 'BPSE-143', title: 'State Politics in India', category: 'Political Science', year: '2025-26', isFree: true },
 ];
 
 const Assignments = () => {
