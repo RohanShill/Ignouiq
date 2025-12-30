@@ -27,7 +27,7 @@ const Home = () => {
                     <div className="grid grid-cols-3">
                         <FeatureCard
                             icon={<Book size={32} />}
-                            title="Comprehensive Notes"
+                            title="Notes"
                             desc="Access detailed study materials and notes for all IGNOU courses in Hindi."
                             badge="Free & Paid"
                         />
@@ -39,7 +39,7 @@ const Home = () => {
                         />
                         <FeatureCard
                             icon={<Newspaper size={32} />}
-                            title="Latest News"
+                            title="Latest Updates"
                             desc="Stay updated with exam dates, notices, and important announcements."
                             badge="Real-time"
                         />

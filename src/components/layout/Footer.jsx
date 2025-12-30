@@ -23,7 +23,7 @@ const Footer = () => {
                     <ul>
                         <li><Link to="/notes">Study Notes</Link></li>
                         <li><Link to="/assignments">Assignments</Link></li>
-                        <li><Link to="/news">Latest News</Link></li>
+                        <li><Link to="/news">Latest Updates</Link></li>
                         <li><Link to="/classes">Live Classes</Link></li>
                         <li><Link to="/about">About Us</Link></li>
                     </ul>
